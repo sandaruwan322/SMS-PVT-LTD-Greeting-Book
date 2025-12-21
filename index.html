@@ -1,0 +1,2508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- PWA Meta Tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="theme-color" content="#4a90e2">
+    <meta name="description" content="Magical Christmas and New Year Greetings Book with Fortune Wheel">
+    
+    <!-- iOS PWA Support -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="SMS Greetings">
+    
+    <!-- Windows PWA Support -->
+    <meta name="msapplication-TileColor" content="#4a90e2">
+    
+    <title>SMS (PVT) LTD Greeting Book</title>
+    
+    <!-- Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Icons for various platforms -->
+    <link rel="icon" href="icon-32x32.png" type="image/png" sizes="32x32">
+    <link rel="icon" href="icon-192x192.png" type="image/png" sizes="192x192">
+    <link rel="icon" href="icon-512x512.png" type="image/png" sizes="512x512">
+    <link rel="apple-touch-icon" href="icon-180x180.png">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Henny+Penny&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        html {
+            font-size: 16px;
+            height: 100%;
+            overflow-x: hidden;
+        }
+        
+        body {
+            font-family: 'EB Garamond', serif;
+            background-color: #0a0a1a;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(28, 58, 103, 0.5) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(67, 21, 85, 0.5) 0%, transparent 20%),
+                repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(46, 14, 58, 0.1) 10px, rgba(46, 14, 58, 0.1) 20px);
+            color: #e6d5b3;
+            min-height: 100vh;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            overflow-x: hidden;
+            padding: 10px;
+            position: relative;
+        }
+        
+        /* Magic Sparkles - BLUE COLOR */
+        .magic-sparkle {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .sparkle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background-color: #4a90e2; /* BLUE COLOR */
+            border-radius: 50%;
+            box-shadow: 0 0 10px 3px #4a90e2; /* BLUE GLOW */
+            animation: sparkleAnim 3s infinite;
+        }
+        
+        @keyframes sparkleAnim {
+            0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+            50% { opacity: 1; transform: scale(1.2) rotate(180deg); }
+        }
+        
+        /* Main Container */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            min-height: 100vh;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            z-index: 2;
+            padding: 10px 0;
+        }
+        
+        /* Book Layout */
+        .book {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            min-height: 600px;
+            perspective: 1500px;
+            z-index: 2;
+            margin: 0 auto;
+        }
+        
+        /* Page Styling - UPDATED FRONT PAGE TO BE TRANSPARENT */
+        .page {
+            position: absolute;
+            width: 100%;
+            height: auto;
+            min-height: 600px;
+            color: #ffffff; /* WHITE TEXT FOR BETTER VISIBILITY */
+            padding: 30px 25px;
+            box-shadow: 
+                0 0 30px rgba(74, 144, 226, 0.3), /* BLUE SHADOW */
+                inset 0 0 40px rgba(139, 115, 85, 0.3);
+            border-radius: 5px 15px 15px 5px;
+            overflow: hidden;
+            transform-origin: left center;
+            transition: transform 1.5s cubic-bezier(0.645, 0.045, 0.355, 1);
+            transform-style: preserve-3d;
+            backface-visibility: hidden;
+            top: 0;
+            left: 0;
+        }
+        
+        .page.front {
+            z-index: 2;
+            /* UPDATED: Make front page semi-transparent with glass effect */
+            background: rgba(10, 10, 26, 0.25); /* Semi-transparent dark background */
+            backdrop-filter: blur(10px); /* Glass blur effect */
+            -webkit-backdrop-filter: blur(10px); /* For Safari */
+            border: 1px solid rgba(74, 144, 226, 0.3); /* Blue border */
+            box-shadow: 
+                0 0 50px rgba(74, 144, 226, 0.4), /* Stronger blue shadow */
+                inset 0 0 40px rgba(74, 144, 226, 0.2); /* Inner blue glow */
+        }
+        
+        .page.back {
+            z-index: 1;
+            display: none;
+            background-color: #fff9e6; /* Keep greeting page solid */
+            color: #040200;
+        }
+        
+        .page.flipped {
+            transform: rotateY(-180deg);
+            z-index: 3;
+        }
+        
+        .page.back.active {
+            display: block;
+        }
+        
+        /* Responsive Typography - UPDATED FOR TRANSPARENT BACKGROUND */
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: clamp(1.8rem, 6vw, 3.5rem);
+            color: #ffffff; /* WHITE TEXT */
+            text-shadow: 
+                2px 2px 0 rgba(74, 144, 226, 0.8), /* Blue shadow for depth */
+                4px 4px 0 rgba(42, 100, 180, 0.6),
+                6px 6px 10px rgba(0, 0, 0, 0.9), /* Stronger black shadow */
+                0 0 20px rgba(74, 144, 226, 0.7); /* Blue glow */
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            transform: translateZ(20px);
+            animation: titleGlow 3s infinite alternate;
+            background: transparent; /* Ensure no background */
+            position: relative;
+            z-index: 3;
+        }
+        
+        @keyframes titleGlow {
+            0% { 
+                text-shadow: 
+                    2px 2px 0 rgba(74, 144, 226, 0.8),
+                    4px 4px 0 rgba(42, 100, 180, 0.6),
+                    6px 6px 10px rgba(0, 0, 0, 0.9),
+                    0 0 20px rgba(74, 144, 226, 0.7); 
+            }
+            100% { 
+                text-shadow: 
+                    2px 2px 0 rgba(74, 144, 226, 1),
+                    4px 4px 0 rgba(42, 100, 180, 0.8),
+                    6px 6px 10px rgba(0, 0, 0, 0.9),
+                    0 0 30px rgba(74, 144, 226, 1),
+                    0 0 40px rgba(255, 255, 255, 0.3); /* Added white glow */
+            }
+        }
+        
+        .header h2 {
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: clamp(1rem, 3.5vw, 1.8rem);
+            color: #f5e9c8; /* Light gold color */
+            text-shadow: 
+                1px 1px 3px rgba(0, 0, 0, 0.8),
+                2px 2px 5px rgba(0, 0, 0, 0.7),
+                0 0 15px rgba(211, 166, 37, 0.6); /* Gold glow */
+            letter-spacing: 1px;
+            position: relative;
+            display: inline-block;
+            line-height: 1.3;
+            margin-top: 10px;
+            background: transparent;
+            z-index: 3;
+        }
+        
+        .header h2:after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            max-width: 300px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #f5e9c8, #4a90e2, #f5e9c8, transparent);
+            border-radius: 2px;
+            box-shadow: 0 0 10px rgba(74, 144, 226, 0.5);
+        }
+        
+        /* Background Blink Animation that shows through text */
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(
+                circle,
+                rgba(74, 144, 226, 0.3) 0%,
+                rgba(28, 58, 103, 0.2) 30%,
+                transparent 70%
+            );
+            animation: backgroundPulse 8s infinite alternate;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        @keyframes backgroundPulse {
+            0% {
+                opacity: 0.3;
+                transform: scale(1) rotate(0deg);
+            }
+            25% {
+                opacity: 0.5;
+                transform: scale(1.05) rotate(90deg);
+            }
+            50% {
+                opacity: 0.7;
+                transform: scale(1.1) rotate(180deg);
+                background: radial-gradient(
+                    circle,
+                    rgba(74, 144, 226, 0.4) 0%,
+                    rgba(28, 58, 103, 0.3) 30%,
+                    transparent 70%
+                );
+            }
+            75% {
+                opacity: 0.5;
+                transform: scale(1.05) rotate(270deg);
+            }
+            100% {
+                opacity: 0.3;
+                transform: scale(1) rotate(360deg);
+            }
+        }
+        
+        /* Content styling for transparent page */
+        .content {
+            padding: 20px 0;
+            font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+            line-height: 1.6;
+            text-shadow: 
+                1px 1px 2px rgba(0, 0, 0, 0.8),
+                0 0 8px rgba(255, 255, 255, 0.3); /* White glow for readability */
+            color: #f5eedf; /* Light cream color */
+            position: relative;
+            z-index: 3;
+            background: transparent;
+        }
+        
+        .content p {
+            margin-bottom: 15px;
+            position: relative;
+            padding: 5px 0;
+        }
+        
+        /* Name Input Section - UPDATED FOR TRANSPARENT BACKGROUND */
+        .name-input-container {
+            text-align: center;
+            margin: 30px 0;
+            position: relative;
+            z-index: 3;
+        }
+        
+        .instruction {
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            color: #f5e9c8; /* Light gold */
+            margin-bottom: 20px;
+            font-weight: 600;
+            line-height: 1.4;
+            text-shadow: 
+                1px 1px 2px rgba(0, 0, 0, 0.8),
+                0 0 10px rgba(211, 166, 37, 0.4);
+            background: transparent;
+        }
+        
+        .name-input-wrapper {
+            position: relative;
+            display: block;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            z-index: 3;
+        }
+        
+        .name-input {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: clamp(1.4rem, 4vw, 1.8rem);
+            font-family: 'Cinzel Decorative', cursive;
+            background: rgba(255, 255, 255, 0.1); /* Semi-transparent background */
+            border: none;
+            border-bottom: 3px solid #f5e9c8;
+            color: #ffffff; /* White text */
+            text-align: center;
+            letter-spacing: 2px;
+            outline: none;
+            transition: all 0.3s;
+            -webkit-appearance: none;
+            border-radius: 0;
+            display: block;
+            min-height: 60px;
+            max-height: 150px;
+            resize: none;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            line-height: 1.4;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            box-shadow: 
+                0 0 20px rgba(74, 144, 226, 0.3),
+                inset 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+        
+        .name-input:focus {
+            border-bottom-color: #4a90e2; 
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 
+                0 0 30px rgba(74, 144, 226, 0.5),
+                inset 0 0 15px rgba(255, 255, 255, 0.2);
+        }
+        
+        .name-input::placeholder {
+            color: rgba(245, 233, 200, 0.7);
+        }
+        
+        .quill-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #4a90e2;
+            font-size: clamp(1.5rem, 3vw, 1.8rem);
+            animation: quillFloat 2s infinite alternate;
+            text-shadow: 0 0 10px rgba(74, 144, 226, 0.7);
+            z-index: 4;
+        }
+        
+        @keyframes quillFloat {
+            0% { transform: translateY(-50%) rotate(-10deg) scale(1); }
+            100% { transform: translateY(-50%) rotate(10deg) scale(1.1); }
+        }
+        
+        .name-display {
+            min-height: 80px;
+            margin-top: 25px;
+            text-align: center;
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: clamp(1.6rem, 5vw, 2.5rem);
+            color: #ffffff; /* White text */
+            letter-spacing: 2px;
+            text-shadow: 
+                2px 2px 0 rgba(0, 0, 0, 0.7),
+                4px 4px 4px rgba(0, 0, 0, 0.5),
+                0 0 20px rgba(74, 144, 226, 0.8); /* Blue glow */
+            position: relative;
+            overflow: visible;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            white-space: pre-wrap;
+            line-height: 1.4;
+            background: transparent;
+            z-index: 3;
+        }
+        
+        .name-line {
+            display: block;
+            width: 100%;
+            text-align: center;
+            margin-bottom: 5px;
+            background: transparent;
+        }
+        
+        .writing-line {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #f5e9c8, #4a90e2, #f5e9c8, transparent);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.1s;
+            box-shadow: 0 0 10px #4a90e2;
+        }
+        
+        .ink-splat {
+            position: absolute;
+            width: clamp(10px, 4vw, 25px);
+            height: clamp(10px, 4vw, 25px);
+            background-color: #4a90e2; /* BLUE COLOR */
+            border-radius: 50%;
+            opacity: 0;
+            transform: scale(0);
+            pointer-events: none;
+            filter: blur(1px);
+            box-shadow: 0 0 15px rgba(74, 144, 226, 0.8);
+        }
+        
+        /* Buttons - UPDATED FOR TRANSPARENT BACKGROUND */
+        .page-turn-btn {
+            position: relative;
+            margin: 30px auto 20px;
+            background: linear-gradient(145deg, rgba(211, 166, 37, 0.9), rgba(184, 133, 26, 0.9));
+            color: #ffffff;
+            border: none;
+            padding: 12px 25px;
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            border-radius: 15px;
+            cursor: pointer;
+            box-shadow: 
+                0 6px 20px rgba(0, 0, 0, 0.6),
+                0 0 0 2px rgba(44, 24, 16, 0.8),
+                inset 0 2px 10px rgba(255, 255, 255, 0.3);
+            transition: all 0.3s;
+            z-index: 10;
+            touch-action: manipulation;
+            min-width: 160px;
+            min-height: 54px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform-style: preserve-3d;
+            transform: translateZ(5px);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border: 1px solid rgba(211, 166, 37, 0.5);
+        }
+        
+        .page-turn-btn:hover, .page-turn-btn:active {
+            transform: translateY(-5px) translateZ(10px);
+            box-shadow: 
+                0 10px 25px rgba(0, 0, 0, 0.8),
+                0 0 0 2px rgba(44, 24, 16, 0.8),
+                inset 0 2px 15px rgba(255, 255, 255, 0.5);
+            background: linear-gradient(145deg, rgba(224, 183, 74, 0.9), rgba(200, 149, 31, 0.9));
+            color: #ffffff;
+        }
+        
+        .page-turn-btn i {
+            margin-left: 0.5rem;
+            transition: transform 0.5s;
+        }
+        
+        /* Magic effect for page turn - ENHANCED */
+        .magic-effect {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            opacity: 0;
+            z-index: 4;
+            background: radial-gradient(
+                circle at center,
+                rgba(74, 144, 226, 0.6) 0%,
+                rgba(42, 100, 180, 0.4) 30%,
+                transparent 70%
+            );
+            transition: opacity 0.5s;
+            mix-blend-mode: screen;
+        }
+        
+        /* Greeting Page - KEEP SOLID BACKGROUND */
+        .greeting-page {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 600px;
+            background-color: #fff9e6; /* Solid background for greeting page */
+            color: #040200;
+        }
+        
+        .greeting-container {
+            text-align: center;
+            width: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .greeting-name {
+            font-family: 'Henny Penny', cursive;
+            font-size: clamp(2.2rem, 6vw, 3rem);
+            color: #4a90e2; /* BLUE COLOR */
+            text-shadow: 
+                3px 3px 0 #2c5aa0,
+                6px 6px 0 #1a3a70,
+                9px 9px 15px rgba(0, 0, 0, 0.8),
+                0 0 20px rgba(74, 144, 226, 0.7);
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+            position: relative;
+            display: inline-block;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            max-width: 100%;
+            padding: 0 10px;
+            animation: nameGlow 2s infinite alternate;
+            transform: translateZ(30px);
+        }
+        
+        @keyframes nameGlow {
+            0% { text-shadow: 3px 3px 0 #2c5aa0, 6px 6px 0 #1a3a70, 9px 9px 15px rgba(0, 0, 0, 0.8), 0 0 20px rgba(74, 144, 226, 0.7); }
+            100% { text-shadow: 3px 3px 0 #2c5aa0, 6px 6px 0 #1a3a70, 9px 9px 15px rgba(0, 0, 0, 0.8), 0 0 30px rgba(74, 144, 226, 1), 0 0 40px rgba(211, 166, 37, 0.8); }
+        }
+        
+        .magical-message-container {
+            position: relative;
+            margin: 0 auto 20px;
+            width: 100%;
+            max-width: 800px;
+            perspective: 1000px;
+            flex: 1;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .magical-message {
+            font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+            line-height: 1.7;
+            background: linear-gradient(145deg, rgba(245, 238, 223, 0.95), rgba(255, 249, 230, 0.98));
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 
+                0 15px 35px rgba(0, 0, 0, 0.2),
+                inset 0 0 50px rgba(211, 166, 37, 0.2),
+                0 0 0 4px #4a90e2, /* BLUE BORDER */
+                0 0 0 8px #000000,
+                0 0 0 12px #2c1810;
+            text-align: center;
+            border-left: 10px solid #4a90e2; /* BLUE BORDER */
+            transform-style: preserve-3d;
+            transform: rotateY(2deg) translateZ(20px);
+            animation: messageFloat 6s infinite ease-in-out;
+            position: relative;
+            overflow: visible;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            width: 100%;
+            max-height: 400px;
+            overflow-y: auto;
+            color: #2c1810;
+        }
+        
+        @keyframes messageFloat {
+            0%, 100% { transform: rotateY(2deg) translateZ(20px) translateY(0); }
+            50% { transform: rotateY(2deg) translateZ(20px) translateY(-8px); }
+        }
+        
+        .magical-message:before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            background: linear-gradient(45deg, transparent, rgba(211, 166, 37, 0.2), transparent);
+            z-index: -1;
+            border-radius: 25px;
+            animation: borderGlow 4s infinite linear;
+        }
+        
+        @keyframes borderGlow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+        
+        .magical-message p {
+            margin-bottom: 15px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: paragraphReveal 1s forwards;
+            position: relative;
+            font-family: 'EB Garamond', serif;
+            font-weight: 600;
+            color: #2c1810;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            font-size: inherit;
+        }
+        
+        .magical-message p:nth-child(1) { animation-delay: 0.5s; }
+        .magical-message p:nth-child(2) { animation-delay: 1.5s; }
+        .magical-message p:nth-child(3) { animation-delay: 2.5s; }
+        
+        @keyframes paragraphReveal {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .signature {
+            text-align: right;
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: clamp(1rem, 2.5vw, 1.5rem);
+            color: #4a90e2;
+            margin-top: 20px;
+            font-style: italic;
+            padding: 0 10px;
+            text-shadow: 
+                2px 2px 4px rgba(0, 0, 0, 0.2),
+                0 0 10px rgba(211, 166, 37, 0.5);
+            transform: translateZ(15px);
+        }
+        
+        /* Button Container - IMPROVED */
+        .button-container {
+            text-align: center;
+            margin-top: 25px;
+            padding-bottom: 15px;
+            width: 100%;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .secret-button {
+            background: linear-gradient(145deg, #2c5aa0, #4a90e2); /* BLUE GRADIENT */
+            color: #f5e9c8;
+            border: none;
+            padding: 15px 30px;
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+            border-radius: 15px;
+            cursor: pointer;
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.5),
+                0 0 0 3px #2c1810,
+                0 0 0 6px #d3a625,
+                inset 0 2px 15px rgba(255, 255, 255, 0.2);
+            transition: all 0.4s;
+            min-width: 180px;
+            min-height: 55px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transform-style: preserve-3d;
+            transform: translateZ(20px);
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 1px;
+        }
+        
+        .secret-button:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: 0.5s;
+        }
+        
+        .secret-button:hover:before {
+            left: 100%;
+        }
+        
+        .secret-button:hover {
+            transform: translateY(-8px) translateZ(30px) scale(1.05);
+            box-shadow: 
+                0 15px 40px rgba(74, 144, 226, 0.7), /* BLUE SHADOW */
+                0 0 0 3px #2c1810,
+                0 0 0 6px #d3a625,
+                inset 0 2px 20px rgba(255, 255, 255, 0.4);
+            background: linear-gradient(145deg, #4a90e2, #2c5aa0); /* BLUE GRADIENT */
+            color: #f5e9c8;
+        }
+        
+        .secret-button i {
+            margin-left: 10px;
+            transition: transform 0.5s;
+        }
+        
+        .secret-button:hover i {
+            transform: rotate(360deg);
+        }
+        
+        /* Lottery Wheel Page - WITHOUT BACK BUTTON */
+        .lottery-page {
+            display: none;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: linear-gradient(135deg, #1a0a1a, #0a0a1a);
+            z-index: 100;
+            padding: 20px;
+            text-align: center;
+            overflow-y: auto;
+        }
+        
+        .lottery-page.active {
+            display: block;
+            animation: pageReveal 1s forwards;
+        }
+        
+        @keyframes pageReveal {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .lottery-header {
+            margin-bottom: 30px;
+            padding-top: 20px;
+        }
+        
+        .lottery-header h2 {
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: clamp(2rem, 5vw, 3rem);
+            color: #d3a625;
+            text-shadow: 
+                3px 3px 0 #4a90e2, /* BLUE COLOR */
+                6px 6px 10px rgba(0, 0, 0, 0.8),
+                0 0 20px rgba(211, 166, 37, 0.7);
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            transform: translateZ(30px);
+        }
+        
+        .lottery-header p {
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            color: #e6d5b3;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        /* Wheel Container */
+        .wheel-container {
+            position: relative;
+            width: clamp(250px, 80vw, 500px);
+            height: clamp(250px, 80vw, 500px);
+            margin: 30px auto;
+        }
+        
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            position: relative;
+            background: conic-gradient(
+                #0576f8 0deg 30deg, /* BLUE COLOR */
+                #f74d0a 30deg 60deg,
+                #f6b607 60deg 90deg,
+                #04e63c 90deg 120deg, /* DARKER BLUE */
+                #0404ea 120deg 150deg,
+                #fbee05 150deg 180deg,
+                #4a90e2 180deg 210deg, /* BLUE COLOR */
+                #2c1810 210deg 240deg,
+                #f10612 240deg 270deg,
+                #cd04ec 270deg 300deg, /* DARKER BLUE */
+                #15efae 300deg 330deg,
+                #fefdfb 330deg 360deg
+            );
+            box-shadow: 
+                0 0 50px rgba(74, 144, 226, 0.5), /* BLUE SHADOW */
+                inset 0 0 50px rgba(0, 0, 0, 0.8);
+            transition: transform 5s cubic-bezier(0.2, 0.8, 0.3, 1);
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transform: rotateX(10deg) translateZ(40px);
+            border: 8px solid #2c1810;
+        }
+        
+        .wheel.spinning {
+            transition: transform 5s cubic-bezier(0.1, 0.7, 0.1, 1);
+        }
+        
+        .wheel-center {
+            position: absolute;
+            width: 15%;
+            height: 15%;
+            background: radial-gradient(circle, #d3a625, #b8851a);
+            border-radius: 80%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            box-shadow: 
+                0 0 20px #d3a625,
+                inset 0 0 10px rgba(255, 255, 255, 0.5);
+            border: 4px solid #2c1810;
+        }
+        
+        .wheel-number {
+            position: absolute;
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            font-weight: bold;
+            color: #f5eedf;
+            text-shadow: 
+                2px 2px 4px rgba(0, 0, 0, 0.8),
+                0 0 10px rgba(255, 255, 255, 0.5);
+            transform-origin: center;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: translateZ(50px);
+        }
+        
+        .wheel-pointer {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 50px;
+            z-index: 3;
+        }
+        
+        .pointer-arrow {
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-top: 30px solid #4a90e2; /* BLUE COLOR */
+            filter: drop-shadow(0 0 10px #4a90e2); /* BLUE GLOW */
+        }
+        
+        .pointer-base {
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 20px;
+            background: #d3a625;
+            box-shadow: 0 0 10px #d3a625;
+        }
+        
+        /* Spin Button */
+        .spin-button {
+            background: linear-gradient(145deg, #d3a625, #b8851a);
+            color: #2c1810;
+            border: none;
+            padding: 15px 30px;
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: clamp(1.2rem, 3vw, 1.6rem);
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.4),
+                0 0 0 3px #2c1810;
+            transition: all 0.3s;
+            margin-top: 30px;
+            min-width: 180px;
+            min-height: 50px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transform-style: preserve-3d;
+            transform: translateZ(20px);
+            letter-spacing: 2px;
+        }
+        
+        .spin-button:hover {
+            transform: translateY(-5px) translateZ(30px);
+            box-shadow: 
+                0 12px 30px rgba(0, 0, 0, 0.6),
+                0 0 0 3px #2c1810;
+            background: linear-gradient(145deg, #e0b74a, #c8951f);
+        }
+        
+        .spin-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: translateZ(20px);
+        }
+        
+        /* Home Button - REPLACES BACK BUTTON */
+        .home-button {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(44, 24, 16, 0.9);
+            color: #d3a625;
+            border: none;
+            padding: 12px 20px;
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            z-index: 101;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .home-button:hover {
+            background: rgba(74, 144, 226, 0.9); /* BLUE COLOR */
+            transform: translateY(-3px);
+        }
+        
+        /* Result Modal */
+        .result-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .result-modal.active {
+            display: flex;
+            animation: modalAppear 0.5s forwards;
+        }
+        
+        @keyframes modalAppear {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .result-content {
+            background: linear-gradient(145deg, #1a0a1a, #0a0a1a);
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 
+                0 0 50px rgba(74, 144, 226, 0.7), /* BLUE SHADOW */
+                0 0 0 5px #d3a625,
+                0 0 0 10px #2c1810;
+            border: 3px solid #4a90e2; /* BLUE BORDER */
+            transform-style: preserve-3d;
+            transform: translateZ(50px);
+            animation: resultFloat 3s infinite ease-in-out;
+        }
+        
+        @keyframes resultFloat {
+            0%, 100% { transform: translateZ(50px) translateY(0); }
+            50% { transform: translateZ(50px) translateY(-10px); }
+        }
+        
+        .result-number {
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: clamp(4rem, 10vw, 6rem);
+            color: #d3a625;
+            text-shadow: 
+                4px 4px 0 #4a90e2, /* BLUE COLOR */
+                8px 8px 15px rgba(0, 0, 0, 0.8),
+                0 0 40px rgba(211, 166, 37, 1);
+            margin: 20px 0;
+            transform: translateZ(60px);
+        }
+        
+        .result-message {
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            color: #f5eedf;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(44, 24, 16, 0.7);
+            border-radius: 10px;
+            border-left: 5px solid #d3a625;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+            transform: translateZ(40px);
+        }
+        
+        .close-modal {
+            background: linear-gradient(145deg, #4a90e2, #2c5aa0); /* BLUE GRADIENT */
+            color: #d3a625;
+            border: none;
+            padding: 12px 30px;
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s;
+            transform: translateZ(30px);
+        }
+        
+        .close-modal:hover {
+            transform: translateY(-5px) translateZ(40px);
+            box-shadow: 0 10px 25px rgba(74, 144, 226, 0.7); /* BLUE SHADOW */
+            background: linear-gradient(145deg, #2c5aa0, #4a90e2); /* BLUE GRADIENT */
+        }
+        
+        /* Control Buttons */
+        .sound-toggle, .music-toggle {
+            position: fixed;
+            background-color: rgba(44, 24, 16, 0.9);
+            color: #d3a625;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.3rem;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 0 15px rgba(211, 166, 37, 0.5);
+            touch-action: manipulation;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform-style: preserve-3d;
+            transform: translateZ(10px);
+        }
+        
+        .sound-toggle {
+            top: 15px;
+            right: 15px;
+        }
+        
+        .music-toggle {
+            top: 75px;
+            right: 15px;
+        }
+        
+        .sound-toggle:hover, .music-toggle:hover {
+            background-color: rgba(74, 144, 226, 0.9);
+            transform: translateZ(15px);
+        }
+        
+        .page-turn-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        
+        /* Letter Animation */
+        .letter {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(30px) rotateX(90deg);
+            animation: letterAppear 0.8s forwards;
+            transform-style: preserve-3d;
+        }
+        
+        @keyframes letterAppear {
+            to {
+                opacity: 1;
+                transform: translateY(0) rotateX(0);
+            }
+        }
+        
+        .quill-trail {
+            position: absolute;
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, #f5e9c8, #4a90e2, transparent);
+            opacity: 0;
+            pointer-events: none;
+            filter: blur(1px);
+            box-shadow: 0 0 10px rgba(74, 144, 226, 0.5);
+        }
+        
+        /* Responsive Breakpoints */
+        @media (max-width: 768px) {
+            body {
+                padding: 5px;
+                align-items: flex-start;
+            }
+            
+            .container {
+                padding: 5px 0;
+            }
+            
+            .book {
+                min-height: 500px;
+            }
+            
+            .page {
+                padding: 20px 15px;
+                min-height: 500px;
+            }
+            
+            .header h1 {
+                font-size: clamp(1.6rem, 5vw, 2.5rem);
+            }
+            
+            .header h2 {
+                font-size: clamp(1rem, 3vw, 1.5rem);
+            }
+            
+            .content {
+                font-size: clamp(1rem, 2.2vw, 1.3rem);
+            }
+            
+            .name-input {
+                font-size: clamp(1.2rem, 3.5vw, 1.5rem);
+                padding: 12px 15px;
+                min-height: 55px;
+            }
+            
+            .quill-icon {
+                right: 10px;
+                font-size: 1.3rem;
+            }
+            
+            .name-display {
+                font-size: clamp(1.4rem, 4vw, 2rem);
+                min-height: 70px;
+                padding: 8px;
+            }
+            
+            .page-turn-btn {
+                margin: 20px auto 15px;
+                padding: 10px 20px;
+                min-width: 140px;
+                min-height: 48px;
+            }
+            
+            .greeting-name {
+                font-size: clamp(1.8rem, 5vw, 2.5rem);
+                margin-bottom: 15px;
+            }
+            
+            .magical-message {
+                font-size: clamp(1.1rem, 2.2vw, 1.3rem);
+                padding: 20px;
+                max-height: 350px;
+            }
+            
+            .secret-button {
+                padding: 12px 25px;
+                min-width: 160px;
+                min-height: 50px;
+                font-size: clamp(1rem, 2.2vw, 1.3rem);
+            }
+            
+            .signature {
+                font-size: clamp(0.9rem, 2.2vw, 1.2rem);
+                margin-top: 15px;
+            }
+            
+            .wheel-container {
+                width: clamp(200px, 85vw, 400px);
+                height: clamp(200px, 85vw, 400px);
+            }
+            
+            .wheel-number {
+                font-size: clamp(1rem, 2.5vw, 1.6rem);
+            }
+            
+            .spin-button {
+                padding: 12px 25px;
+                font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+                min-width: 160px;
+            }
+            
+            .lottery-header h2 {
+                font-size: clamp(1.6rem, 4vw, 2.5rem);
+            }
+            
+            .lottery-header p {
+                font-size: clamp(0.9rem, 2.2vw, 1.2rem);
+            }
+            
+            .result-content {
+                padding: 20px;
+            }
+            
+            .result-number {
+                font-size: clamp(3rem, 8vw, 5rem);
+            }
+            
+            .result-message {
+                font-size: clamp(1rem, 2.5vw, 1.3rem);
+                padding: 15px;
+            }
+            
+            .sound-toggle, .music-toggle {
+                width: 45px;
+                height: 45px;
+                font-size: 1.2rem;
+            }
+            
+            .music-toggle {
+                top: 70px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .book {
+                min-height: 450px;
+            }
+            
+            .page {
+                padding: 15px 10px;
+                min-height: 450px;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .header h2 {
+                font-size: 1rem;
+            }
+            
+            .content {
+                font-size: 1rem;
+                padding: 15px 0;
+            }
+            
+            .name-input {
+                font-size: 1.2rem;
+                padding: 10px 12px;
+                min-height: 50px;
+            }
+            
+            .name-display {
+                font-size: 1.3rem;
+                min-height: 60px;
+                margin-top: 15px;
+            }
+            
+            .page-turn-btn {
+                padding: 8px 16px;
+                font-size: 1rem;
+                min-width: 130px;
+                min-height: 44px;
+            }
+            
+            .greeting-name {
+                font-size: 1.6rem;
+            }
+            
+            .magical-message {
+                font-size: 1rem;
+                padding: 15px;
+                max-height: 300px;
+            }
+            
+            .secret-button {
+                padding: 10px 20px;
+                font-size: 1rem;
+                min-width: 150px;
+                min-height: 45px;
+            }
+            
+            .wheel-container {
+                width: 280px;
+                height: 280px;
+                margin: 20px auto;
+            }
+            
+            .spin-button {
+                padding: 10px 20px;
+                font-size: 1.1rem;
+            }
+            
+            .home-button {
+                bottom: 10px;
+                left: 10px;
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+            
+            .sound-toggle, .music-toggle {
+                width: 40px;
+                height: 40px;
+                font-size: 1.1rem;
+                top: 10px;
+                right: 10px;
+            }
+            
+            .music-toggle {
+                top: 60px;
+            }
+        }
+        
+        @media (min-width: 1200px) {
+            .container {
+                max-width: 1100px;
+            }
+            
+            .book {
+                max-width: 1000px;
+            }
+        }
+        
+        /* Prevent text size adjustment on mobile */
+        html {
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+        }
+        
+        /* Ensure proper scaling on iOS */
+        @supports (-webkit-touch-callout: none) {
+            body {
+                min-height: -webkit-fill-available;
+            }
+        }
+        
+        /* Scrollbar styling */
+        .magical-message::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .magical-message::-webkit-scrollbar-track {
+            background: rgba(211, 166, 37, 0.1);
+            border-radius: 4px;
+        }
+        
+        .magical-message::-webkit-scrollbar-thumb {
+            background: #4a90e2; /* BLUE COLOR */
+            border-radius: 4px;
+        }
+        
+        .magical-message::-webkit-scrollbar-thumb:hover {
+            background: #2c5aa0; /* DARKER BLUE */
+        }
+        
+        /* Additional responsive for very small screens */
+        @media (max-width: 350px) {
+            .header h1 {
+                font-size: 1.3rem;
+            }
+            
+            .header h2 {
+                font-size: 0.9rem;
+            }
+            
+            .content {
+                font-size: 0.9rem;
+            }
+            
+            .name-input {
+                font-size: 1.1rem;
+            }
+            
+            .name-display {
+                font-size: 1.2rem;
+            }
+            
+            .greeting-name {
+                font-size: 1.4rem;
+            }
+            
+            .magical-message {
+                font-size: 0.9rem;
+            }
+        }
+        
+        /* For very tall screens */
+        @media (min-height: 800px) and (max-width: 768px) {
+            .book {
+                min-height: 700px;
+            }
+            
+            .page {
+                min-height: 700px;
+            }
+            
+            .magical-message-container {
+                min-height: 250px;
+            }
+        }
+        
+        /* For landscape orientation */
+        @media (max-height: 600px) and (orientation: landscape) {
+            body {
+                padding: 5px;
+            }
+            
+            .book {
+                min-height: 400px;
+            }
+            
+            .page {
+                min-height: 400px;
+                padding: 15px;
+            }
+            
+            .header {
+                margin-bottom: 10px;
+            }
+            
+            .content {
+                padding: 10px 0;
+            }
+            
+            .name-input-container {
+                margin: 15px 0;
+            }
+            
+            .magical-message-container {
+                min-height: 150px;
+            }
+            
+            .magical-message {
+                padding: 15px;
+                max-height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Magical sparkles in background - BLUE COLOR -->
+    <div class="magic-sparkle" id="magicSparkle"></div>
+    
+    <!-- Sound toggle button -->
+    <button class="sound-toggle" id="soundToggle" aria-label="Toggle sound effects">
+        <i class="fas fa-volume-up"></i>
+    </button>
+    
+    <!-- Music toggle button -->
+    <button class="music-toggle" id="musicToggle" aria-label="Toggle background music">
+        <i class="fas fa-music"></i>
+    </button>
+    
+    <!-- Audio element for background music -->
+    <audio id="backgroundMusic" loop preload="auto">
+        <source src="https://assets.mixkit.co/music/preview/mixkit-magical-forest-667.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    
+    <!-- Sound effects -->
+    <audio id="writingSound" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-pen-writing-1173.mp3" type="audio/mpeg">
+    </audio>
+    
+    <audio id="pageTurnSound" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-book-page-turn-1176.mp3" type="audio/mpeg">
+    </audio>
+    
+    <audio id="wheelSpinSound" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-arrow-whoosh-1491.mp3" type="audio/mpeg">
+    </audio>
+    
+    <audio id="magicSound" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-magic-sparkle-300.mp3" type="audio/mpeg">
+    </audio>
+    
+    <!-- Main Container -->
+    <div class="container">
+        <!-- The magical book -->
+        <div class="book" id="book">
+            <!-- Front page - NOW TRANSPARENT -->
+            <div class="page front" id="frontPage">
+                <div class="header">
+                    <h1>SAMARASINGHE MOTOR STORES (PVT) LTD</h1>
+                    <h2>CHRISTMAS & NEW YEAR GREETINGS</h2>
+                </div>
+                
+                <div class="content">
+                    <p>Welcome to the SMS (PVT) LTD Book of Magical Greetings! This enchanted book will create wishes for you.</p>
+                    
+                    <p>To begin, please use the enchanted quill below to write your name. As you type, your name will magically appear on the screen.</p>
+                    
+                    <p>Once your name is written, you may turn the page to reveal your personalized Christmas and New Year greetings from the wizarding world.</p>
+                </div>
+                
+                <div class="name-input-container">
+                    <div class="instruction">Write your name with the magical quill:</div>
+                    
+                    <div class="name-input-wrapper">
+                        <textarea class="name-input" id="nameInput" placeholder="Your Name Here" maxlength="100" autocomplete="off" aria-label="Type your name" rows="1"></textarea>
+                        <div class="quill-icon">
+                            <i class="fas fa-feather-alt"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="name-display" id="nameDisplay">
+                        <div class="writing-line" id="writingLine"></div>
+                    </div>
+                </div>
+                
+                <button class="page-turn-btn" id="pageTurnBtn" aria-label="Turn page">
+                    Turn Page <i class="fas fa-sync-alt"></i>
+                </button>
+                
+                <!-- Magic effect for page turn -->
+                <div class="magic-effect" id="magicEffect"></div>
+            </div>
+            
+            <!-- Greeting page - SOLID BACKGROUND -->
+            <div class="page back greeting-page" id="greetingPage">
+                <div class="greeting-container">
+                    <div class="greeting-name" id="greetingName"></div>
+                    
+                    <div class="magical-message-container">
+                        <div class="magical-message" id="magicalMessage">
+                            <!-- Message will be inserted here -->
+                        </div>
+                    </div>
+                    
+                    <div class="signature">
+                        <p>powered by,</p>
+                        <p>k2s system</p>
+                    </div>
+                    
+                    <div class="button-container">
+                        <button class="secret-button" id="secretButton">
+                            <i class="fas fa-gift"></i> Discover Your Fortune
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Lottery Wheel Page - WITHOUT BACK BUTTON -->
+        <div class="lottery-page" id="lotteryPage">
+            <!-- Home Button to go back to main page -->
+            <button class="home-button" id="homeButton">
+                <i class="fas fa-home"></i> Home
+            </button>
+            
+            <div class="lottery-header">
+                <h2>Magical Fortune Wheel</h2>
+                <p>Spin the wheel to discover your magical fortune for 2026! Each number holds a special message</p>
+            </div>
+            
+            <div class="wheel-container">
+                <div class="wheel-pointer">
+                    <div class="pointer-arrow"></div>
+                    <div class="pointer-base"></div>
+                </div>
+                
+                <div class="wheel" id="wheel">
+                    <div class="wheel-center"></div>
+                    <!-- Numbers will be added dynamically -->
+                </div>
+            </div>
+            
+            <button class="spin-button" id="spinButton">
+                <i class="fas fa-redo"></i> Spin the Wheel
+            </button>
+        </div>
+    </div>
+    
+    <!-- Result Modal -->
+    <div class="result-modal" id="resultModal">
+        <div class="result-content">
+            <h2 style="color: #d3a625; font-family: 'Cinzel Decorative', cursive; margin-bottom: 20px;">Your Magical Fortune!</h2>
+            <div class="result-number" id="resultNumber"></div>
+            <div class="result-message" id="resultMessage"></div>
+            <button class="close-modal" id="closeModal">Continue</button>
+        </div>
+    </div>
+
+    <script>
+        // Initialize variables
+        const nameInput = document.getElementById('nameInput');
+        const nameDisplay = document.getElementById('nameDisplay');
+        const writingLine = document.getElementById('writingLine');
+        const pageTurnBtn = document.getElementById('pageTurnBtn');
+        const frontPage = document.getElementById('frontPage');
+        const greetingPage = document.getElementById('greetingPage');
+        const greetingName = document.getElementById('greetingName');
+        const magicalMessage = document.getElementById('magicalMessage');
+        const secretButton = document.getElementById('secretButton');
+        const lotteryPage = document.getElementById('lotteryPage');
+        const homeButton = document.getElementById('homeButton');
+        const wheel = document.getElementById('wheel');
+        const spinButton = document.getElementById('spinButton');
+        const resultModal = document.getElementById('resultModal');
+        const resultNumber = document.getElementById('resultNumber');
+        const resultMessage = document.getElementById('resultMessage');
+        const closeModal = document.getElementById('closeModal');
+        const soundToggle = document.getElementById('soundToggle');
+        const musicToggle = document.getElementById('musicToggle');
+        
+        // Audio elements
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        const writingSound = document.getElementById('writingSound');
+        const pageTurnSound = document.getElementById('pageTurnSound');
+        const wheelSpinSound = document.getElementById('wheelSpinSound');
+        const magicSound = document.getElementById('magicSound');
+        
+        // Secret messages for each number
+        const secretMessages = { 
+            1: "2026 වසර තුළ ඔබට ඔබගේම නව නිවසක් මිලදී ගැනීමට හැකි වේවා.",
+            2: "ඔබ හීන දැකපු ඔබ ආසම වාහනය 2026 වසර තුළ ඔබට මිල දී ගත වාහනය හැකි වේ.",
+            3: "2026 වසර ඔබගේ සියලු ලෙඩ රෝග සුවපත් වෙමින් නිරෝගී සහ ශක්තිමත් වසරක් වේ.",
+            4: "2026 ඔබ මුහුණ දෙන සියලු තරග හා විභාග ජයග්‍රහණය කිරීමට හැකි වන වසරක් වේ.",
+            5: "2026 වසර ඔබට ඔබගේ සැබෑ ආදරය මුනගැසෙන වසරක් වේ.",
+            6: "2026 වසර ඔබට ඔබගේ පවුලේ අය සමඟ සතුටින්, ප්‍රීතිමත්ව, ආදරයෙන් කාලය ගත කිරීමට හැකිවන වසරක් වේ.",
+            7: "2026 වසර මුල ඔබට ලොතරැයි පළමු තෑග්ගක් ජයග්‍රහණය කිරීමට හැකිවේ.",
+            8: "2026 වසර ඔබ කල සියලු කැපකිරීම්ම හන්සි සහ ඉවසීම වෙනුවෙන් වටිනා ප්‍රතිඵල ලැබෙන වසරක් වේ.",
+            9: "2026 වසර ඔබ බාහිරවත් අභ්‍යන්තරවත් ලස්සන වෙමින් මානසිකව සුවපත් හා සාමකාමී වසරක් වේ",
+            10: "2026 වසර ඔබට ආර්ථික සාර්ථකත්වය සහ මුදල් ස්ථාවරත්වය ලැබෙන වසරක් වේ.",
+            11: "2026 වසර ඔබගේ සිතුවිලි ධනාත්මක ශක්තියෙන් පිරී, ඔබට යහපත් දේවල් ආකර්ෂණය කිරීමට හැකි වසරක් වේ.",
+            12: "2026 වසර ඔබගේ සියලුම සිහින සැබෑ කරගන්නා වසරක් වේවා!"
+        };
+        
+        let soundEnabled = true;
+        let musicEnabled = true;
+        let audioInitialized = false;
+        let name = '';
+        let writingTimeout;
+        let isWheelSpinning = false;
+        let wheelRotation = 0;
+        
+        // Initialize the application
+        function initApp() {
+            // Create BLUE sparkles
+            createSparkles();
+            
+            // Set up book dimensions based on screen size
+            setupBookDimensions();
+            
+            // Set up auto-resizing textarea
+            setupAutoResizeTextarea();
+            
+            // Focus on the name input with a slight delay
+            setTimeout(() => {
+                nameInput.focus();
+                window.scrollTo(0, 0);
+            }, 300);
+            
+            // Disable page turn button initially
+            pageTurnBtn.classList.add('disabled');
+            
+            // Set up audio
+            setupAudio();
+            
+            // Set up the lottery wheel
+            setupWheel();
+            
+            // Add event listeners
+            setupEventListeners();
+            
+            // Add sample ink splat
+            setTimeout(createInkSplat, 1000);
+            
+            // Register Service Worker for PWA
+            registerServiceWorker();
+        }
+        
+        // Register Service Worker
+        function registerServiceWorker() {
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('/sw.js')
+                        .then(registration => {
+                            console.log('Service Worker registered with scope:', registration.scope);
+                        })
+                        .catch(error => {
+                            console.log('Service Worker registration failed:', error);
+                        });
+                });
+            }
+        }
+        
+        // Create BLUE magical sparkles
+        function createSparkles() {
+            const sparkleContainer = document.getElementById('magicSparkle');
+            const sparkleCount = Math.min(Math.floor(window.innerWidth * window.innerHeight / 8000), 80);
+            
+            for (let i = 0; i < sparkleCount; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.classList.add('sparkle');
+                
+                // Random position
+                const left = Math.random() * 100;
+                const top = Math.random() * 100;
+                sparkle.style.left = `${left}%`;
+                sparkle.style.top = `${top}%`;
+                
+                // Random size
+                const size = 3 + Math.random() * 5;
+                sparkle.style.width = `${size}px`;
+                sparkle.style.height = `${size}px`;
+                
+                // Random BLUE color variations
+                const blueColors = ['#4a90e2', '#5a9cf0', '#3a80d2', '#6aa6ff'];
+                sparkle.style.backgroundColor = blueColors[Math.floor(Math.random() * blueColors.length)];
+                
+                // Random animation
+                const delay = Math.random() * 5;
+                const duration = 2 + Math.random() * 4;
+                sparkle.style.animationDelay = `${delay}s`;
+                sparkle.style.animationDuration = `${duration}s`;
+                
+                sparkleContainer.appendChild(sparkle);
+            }
+        }
+        
+        // Set up auto-resizing textarea
+        function setupAutoResizeTextarea() {
+            // Auto-resize textarea based on content
+            nameInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+                
+                // Update name display
+                handleNameInput();
+            });
+            
+            // Initial resize
+            nameInput.style.height = 'auto';
+            nameInput.style.height = (nameInput.scrollHeight) + 'px';
+        }
+        
+        // Set up book dimensions based on screen size
+        function setupBookDimensions() {
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+            
+            // Calculate optimal book height
+            let bookHeight;
+            if (viewportHeight < 500) {
+                bookHeight = viewportHeight * 0.85;
+            } else if (viewportHeight < 800) {
+                bookHeight = viewportHeight * 0.80;
+            } else {
+                bookHeight = viewportHeight * 0.75;
+            }
+            
+            // Ensure minimum and maximum heights
+            bookHeight = Math.max(bookHeight, 450);
+            bookHeight = Math.min(bookHeight, 800);
+            
+            // Apply the height to the book
+            document.getElementById('book').style.height = `${bookHeight}px`;
+            
+            // Adjust font sizes for very small screens
+            if (viewportWidth < 350) {
+                document.documentElement.style.fontSize = '14px';
+            }
+            
+            // For very tall screens, adjust greeting page layout
+            if (viewportHeight > 800) {
+                document.querySelector('.greeting-page').style.padding = '20px 15px';
+            }
+        }
+        
+        // Set up audio with better initialization
+        function setupAudio() {
+            // Set initial volume
+            backgroundMusic.volume = 0.3;
+            writingSound.volume = 0.2;
+            pageTurnSound.volume = 0.3;
+            wheelSpinSound.volume = 0.4;
+            magicSound.volume = 0.5;
+            
+            // Auto-play music when user interacts (required by browsers)
+            const initAudioOnInteraction = () => {
+                if (!audioInitialized) {
+                    audioInitialized = true;
+                    
+                    // Try to play background music
+                    if (musicEnabled) {
+                        backgroundMusic.play().catch(error => {
+                            console.log("Audio play failed:", error);
+                        });
+                    }
+                }
+            };
+            
+            // Add multiple event listeners for audio initialization
+            document.addEventListener('click', initAudioOnInteraction);
+            document.addEventListener('touchstart', initAudioOnInteraction);
+            document.addEventListener('keydown', initAudioOnInteraction);
+            
+            // Also initialize when user interacts with the page
+            nameInput.addEventListener('focus', initAudioOnInteraction);
+            pageTurnBtn.addEventListener('click', initAudioOnInteraction);
+            secretButton.addEventListener('click', initAudioOnInteraction);
+        }
+        
+        // Set up the lottery wheel
+        function setupWheel() {
+            const wheelElement = document.getElementById('wheel');
+            wheelElement.innerHTML = '<div class="wheel-center"></div>';
+            
+            // Create 12 segments with numbers
+            for (let i = 1; i <= 12; i++) {
+                const numberElement = document.createElement('div');
+                numberElement.classList.add('wheel-number');
+                numberElement.textContent = i;
+                
+                // Position each number around the circle
+                const angle = (i - 1) * 30; // 30 degrees per segment (360/12)
+                const radius = 40; // Percentage from center
+                
+                // Convert polar coordinates to Cartesian
+                const radians = (angle - 90) * Math.PI / 180; // -90 to start from top
+                const x = 50 + radius * Math.cos(radians);
+                const y = 50 + radius * Math.sin(radians);
+                
+                numberElement.style.left = `${x}%`;
+                numberElement.style.top = `${y}%`;
+                
+                // Rotate number to face outward
+                numberElement.style.transform = `translate(-50%, -50%) rotate(${angle}deg) translateZ(50px)`;
+                
+                wheelElement.appendChild(numberElement);
+            }
+        }
+        
+        // Set up event listeners
+        function setupEventListeners() {
+            // Name input event
+            nameInput.addEventListener('input', handleNameInput);
+            
+            // Page turn button
+            pageTurnBtn.addEventListener('click', handlePageTurn);
+            
+            // Secret button
+            secretButton.addEventListener('click', handleSecretButton);
+            
+            // Home button (replaces back button)
+            homeButton.addEventListener('click', handleHomeButton);
+            
+            // Spin button
+            spinButton.addEventListener('click', spinWheel);
+            
+            // Wheel click to spin
+            wheel.addEventListener('click', spinWheel);
+            
+            // Close modal - MODIFIED TO RESET APP AND GO TO HOME PAGE
+            closeModal.addEventListener('click', () => {
+                resultModal.classList.remove('active');
+                if (soundEnabled) magicSound.play();
+                
+                // Automatically reset app and go back to home page
+                setTimeout(resetAndGoToHomePage, 300);
+            });
+            
+            // Sound toggle
+            soundToggle.addEventListener('click', toggleSound);
+            
+            // Music toggle
+            musicToggle.addEventListener('click', toggleMusic);
+            
+            // Window resize
+            window.addEventListener('resize', handleResize);
+            
+            // Keyboard shortcuts
+            document.addEventListener('keydown', handleKeydown);
+            
+            // Prevent zoom on double tap (for mobile)
+            let lastTouchEnd = 0;
+            document.addEventListener('touchend', (event) => {
+                const now = Date.now();
+                if (now - lastTouchEnd <= 300) {
+                    event.preventDefault();
+                }
+                lastTouchEnd = now;
+            }, false);
+            
+            // Ensure button is always clickable
+            secretButton.addEventListener('touchstart', (e) => {
+                e.stopPropagation();
+            }, { passive: true });
+            
+            // Prevent pull-to-refresh on mobile
+            document.addEventListener('touchmove', function(e) {
+                if (e.touches.length > 1) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+        }
+        
+        // Handle name input with magical writing effect and MULTI-LINE support
+        function handleNameInput() {
+            const newName = this.value;
+            
+            clearTimeout(writingTimeout);
+            
+            // Enable/disable page turn button
+            if (newName.trim().length > 0) {
+                pageTurnBtn.classList.remove('disabled');
+            } else {
+                pageTurnBtn.classList.add('disabled');
+                nameDisplay.innerHTML = '<div class="writing-line" id="writingLine"></div>';
+                return;
+            }
+            
+            // If deleting characters
+            if (newName.length < name.length) {
+                name = newName;
+                updateNameDisplay(name);
+                return;
+            }
+            
+            // If adding characters
+            if (newName.length > name.length) {
+                const addedChar = newName.charAt(newName.length - 1);
+                writeCharacter(addedChar);
+            }
+            
+            name = newName;
+        }
+        
+        // Update name display with animated letters and MULTI-LINE support
+        function updateNameDisplay(text) {
+            nameDisplay.innerHTML = '';
+            
+            // Split text into lines based on approximate width
+            const lines = splitTextIntoLines(text, 20); // 20 characters per line max
+            
+            lines.forEach((line, lineIndex) => {
+                const lineContainer = document.createElement('div');
+                lineContainer.classList.add('name-line');
+                
+                for (let i = 0; i < line.length; i++) {
+                    const letterSpan = document.createElement('span');
+                    letterSpan.classList.add('letter');
+                    letterSpan.textContent = line[i];
+                    letterSpan.style.animationDelay = `${(lineIndex * 0.5) + (i * 0.05)}s`;
+                    lineContainer.appendChild(letterSpan);
+                }
+                
+                nameDisplay.appendChild(lineContainer);
+            });
+            
+            // Add writing line
+            const line = document.createElement('div');
+            line.classList.add('writing-line');
+            line.id = 'writingLine';
+            nameDisplay.appendChild(line);
+            writingLine.style.transform = 'scaleX(1)';
+        }
+        
+        // Split text into lines based on max characters per line
+        function splitTextIntoLines(text, maxCharsPerLine) {
+            const words = text.split(' ');
+            const lines = [];
+            let currentLine = '';
+            
+            words.forEach(word => {
+                if ((currentLine + ' ' + word).length <= maxCharsPerLine || currentLine === '') {
+                    if (currentLine !== '') {
+                        currentLine += ' ' + word;
+                    } else {
+                        currentLine = word;
+                    }
+                } else {
+                    lines.push(currentLine);
+                    currentLine = word;
+                }
+            });
+            
+            if (currentLine !== '') {
+                lines.push(currentLine);
+            }
+            
+            return lines;
+        }
+        
+        // Write character with magical animation
+        function writeCharacter(char) {
+            // Show writing line
+            writingLine.style.transform = 'scaleX(1)';
+            
+            // Create quill trail
+            createQuillTrail();
+            
+            // Play writing sound
+            if (soundEnabled) {
+                writingSound.currentTime = 0;
+                writingSound.play();
+            }
+            
+            // Update display with new letter
+            updateNameDisplay(name + char);
+            
+            // Random ink splat
+            if (Math.random() > 0.7) {
+                createInkSplat();
+            }
+            
+            // Hide writing line after delay
+            writingTimeout = setTimeout(() => {
+                writingLine.style.transform = 'scaleX(0)';
+            }, 100);
+        }
+        
+        // Create quill trail effect with BLUE color
+        function createQuillTrail() {
+            const trail = document.createElement('div');
+            trail.classList.add('quill-trail');
+            
+            const nameLength = name.length;
+            const leftPosition = 50 + ((nameLength % 20) * 3);
+            trail.style.left = `${Math.min(Math.max(leftPosition, 10), 90)}%`;
+            
+            nameDisplay.appendChild(trail);
+            
+            setTimeout(() => {
+                trail.style.opacity = '0.8';
+                trail.style.transition = 'opacity 0.3s';
+                
+                setTimeout(() => {
+                    trail.style.opacity = '0';
+                    
+                    setTimeout(() => {
+                        if (trail.parentNode) {
+                            trail.parentNode.removeChild(trail);
+                        }
+                    }, 300);
+                }, 300);
+            }, 10);
+        }
+        
+        // Create BLUE ink splat effect
+        function createInkSplat() {
+            const inkSplat = document.createElement('div');
+            inkSplat.classList.add('ink-splat');
+            
+            const left = 40 + Math.random() * 20;
+            const top = 20 + Math.random() * 40;
+            inkSplat.style.left = `${left}%`;
+            inkSplat.style.top = `${top}%`;
+            
+            // Random BLUE color variations
+            const blueColors = ['#4a90e2', '#2c5aa0', '#1a3a70'];
+            inkSplat.style.backgroundColor = blueColors[Math.floor(Math.random() * blueColors.length)];
+            
+            nameDisplay.appendChild(inkSplat);
+            
+            setTimeout(() => {
+                inkSplat.style.opacity = '1';
+                inkSplat.style.transform = 'scale(1.5)';
+                inkSplat.style.transition = 'all 0.4s';
+                
+                // Add blur effect
+                inkSplat.style.filter = 'blur(3px)';
+            }, 10);
+            
+            setTimeout(() => {
+                inkSplat.style.opacity = '0';
+                inkSplat.style.transform = 'scale(3)';
+                inkSplat.style.filter = 'blur(5px)';
+                
+                setTimeout(() => {
+                    if (inkSplat.parentNode) {
+                        inkSplat.parentNode.removeChild(inkSplat);
+                    }
+                }, 400);
+            }, 1500);
+        }
+        
+        // Handle page turn with magical greeting - UPDATED MESSAGE
+        function handlePageTurn() {
+            if (this.classList.contains('disabled')) return;
+            
+            if (soundEnabled) {
+                pageTurnSound.currentTime = 0;
+                pageTurnSound.play();
+            }
+            
+            // Add magic effect
+            document.getElementById('magicEffect').style.opacity = '1';
+            
+            // Flip the page after a short delay
+            setTimeout(() => {
+                frontPage.classList.add('flipped');
+                
+                // Show greeting page after flip animation
+                setTimeout(() => {
+                    greetingPage.classList.add('active');
+                    
+                    // Display name with magical animation
+                    const nameText = name;
+                    greetingName.innerHTML = '';
+                    
+                    // Split name into lines for display
+                    const nameLines = splitTextIntoLines(nameText, 15);
+                    
+                    nameLines.forEach((line, lineIndex) => {
+                        const lineContainer = document.createElement('div');
+                        lineContainer.style.display = 'block';
+                        lineContainer.style.marginBottom = lineIndex < nameLines.length - 1 ? '0.3rem' : '0';
+                        
+                        for (let i = 0; i < line.length; i++) {
+                            const letterSpan = document.createElement('span');
+                            letterSpan.classList.add('letter');
+                            letterSpan.textContent = line[i];
+                            letterSpan.style.animationDelay = `${(lineIndex * 0.3) + (i * 0.1)}s`;
+                            lineContainer.appendChild(letterSpan);
+                        }
+                        
+                        greetingName.appendChild(lineContainer);
+                    });
+                    
+                    // Create magical greeting message - UPDATED CONTENT
+                    createMagicalGreeting();
+                    
+                    // Ensure button container is visible
+                    document.querySelector('.button-container').style.display = 'block';
+                    
+                    // Hide magic effect
+                    document.getElementById('magicEffect').style.opacity = '0';
+                    
+                    // Play magical sound
+                    if (soundEnabled) {
+                        magicSound.currentTime = 0;
+                        magicSound.play();
+                    }
+                    
+                    // Scroll to top of message
+                    setTimeout(() => {
+                        const messageContainer = document.querySelector('.magical-message-container');
+                        if (messageContainer) {
+                            messageContainer.scrollTop = 0;
+                        }
+                    }, 100);
+                }, 800);
+            }, 300);
+        }
+        
+        // Create magical personalized greeting - UPDATED MESSAGE
+        function createMagicalGreeting() {
+            magicalMessage.innerHTML = '';
+            
+            // Updated message content
+            const messages = [
+                `Dear ${name},`,
+                `May you have a Merry Christmas and a Happy New Year 2026.`,
+                `May all your wishes come true in the New Year!`
+            ];
+            
+            // Add each message line with animation
+            messages.forEach((message, index) => {
+                const messagePara = document.createElement('p');
+                messagePara.textContent = message;
+                messagePara.style.animationDelay = `${index * 1}s`;
+                magicalMessage.appendChild(messagePara);
+            });
+        }
+        
+        // Handle secret button click
+        function handleSecretButton() {
+            if (soundEnabled) {
+                magicSound.currentTime = 0;
+                magicSound.play();
+            }
+            
+            // Add magical transition effect
+            document.getElementById('magicEffect').style.opacity = '1';
+            
+            // Hide greeting page and show lottery page
+            setTimeout(() => {
+                greetingPage.classList.remove('active');
+                lotteryPage.classList.add('active');
+                document.getElementById('magicEffect').style.opacity = '0';
+                
+                // Scroll to top of lottery page
+                setTimeout(() => {
+                    lotteryPage.scrollTop = 0;
+                }, 100);
+            }, 500);
+        }
+        
+        // Handle home button (goes back to front page)
+        function handleHomeButton() {
+            goToHomePage();
+        }
+        
+        // Function to reset app and go back to home page
+        function resetAndGoToHomePage() {
+            if (soundEnabled) {
+                pageTurnSound.currentTime = 0;
+                pageTurnSound.play();
+            }
+            
+            // Add magic effect
+            document.getElementById('magicEffect').style.opacity = '1';
+            
+            // Close result modal if open
+            resultModal.classList.remove('active');
+            
+            // Hide lottery page and go back to front page
+            setTimeout(() => {
+                lotteryPage.classList.remove('active');
+                frontPage.classList.remove('flipped');
+                greetingPage.classList.remove('active');
+                
+                // RESET ALL FIELDS TO INITIAL STATE
+                // Reset name input
+                nameInput.value = '';
+                name = '';
+                nameInput.style.height = 'auto';
+                nameInput.style.height = (nameInput.scrollHeight) + 'px';
+                
+                // Reset name display
+                nameDisplay.innerHTML = '<div class="writing-line" id="writingLine"></div>';
+                writingLine.style.transform = 'scaleX(0)';
+                
+                // Reset greeting name
+                greetingName.innerHTML = '';
+                
+                // Reset magical message
+                magicalMessage.innerHTML = '';
+                
+                // Reset wheel
+                wheelRotation = 0;
+                wheel.style.transform = `rotateX(10deg) translateZ(40px) rotate(0deg)`;
+                wheel.classList.remove('spinning');
+                isWheelSpinning = false;
+                spinButton.disabled = false;
+                
+                // Disable page turn button
+                pageTurnBtn.classList.add('disabled');
+                
+                // Reset to initial state
+                setTimeout(() => {
+                    document.getElementById('magicEffect').style.opacity = '0';
+                    nameInput.focus();
+                    window.scrollTo(0, 0);
+                }, 300);
+            }, 300);
+        }
+        
+        // Function to go back to home page without resetting
+        function goToHomePage() {
+            if (soundEnabled) {
+                pageTurnSound.currentTime = 0;
+                pageTurnSound.play();
+            }
+            
+            // Add magic effect
+            document.getElementById('magicEffect').style.opacity = '1';
+            
+            // Close result modal if open
+            resultModal.classList.remove('active');
+            
+            // Hide lottery page and go back to front page
+            setTimeout(() => {
+                lotteryPage.classList.remove('active');
+                frontPage.classList.remove('flipped');
+                greetingPage.classList.remove('active');
+                
+                // Reset wheel position
+                wheelRotation = 0;
+                wheel.style.transform = `rotateX(10deg) translateZ(40px) rotate(0deg)`;
+                wheel.classList.remove('spinning');
+                isWheelSpinning = false;
+                spinButton.disabled = false;
+                
+                // Reset to initial state
+                setTimeout(() => {
+                    document.getElementById('magicEffect').style.opacity = '0';
+                    nameInput.focus();
+                    window.scrollTo(0, 0);
+                }, 300);
+            }, 300);
+        }
+        
+        // Spin the lottery wheel
+        function spinWheel() {
+            if (isWheelSpinning) return;
+            
+            isWheelSpinning = true;
+            spinButton.disabled = true;
+            
+            if (soundEnabled) {
+                wheelSpinSound.currentTime = 0;
+                wheelSpinSound.play();
+            }
+            
+            // Calculate random spin (5-10 full rotations + random segment)
+            const fullRotations = 5 + Math.floor(Math.random() * 6); // 5-10 full rotations
+            const segmentAngle = 30; // 12 segments = 30 degrees each
+            const targetSegment = Math.floor(Math.random() * 12); // 0-11
+            const extraRotation = targetSegment * segmentAngle;
+            
+            // Total rotation in degrees
+            const totalRotation = (fullRotations * 360) + extraRotation;
+            
+            // Add some randomness to the final position for realism
+            const randomOffset = (Math.random() * 10) - 5; // -5 to +5 degrees
+            const finalRotation = totalRotation + randomOffset;
+            
+            // Update wheel rotation
+            wheelRotation = finalRotation;
+            
+            // Apply spinning animation
+            wheel.classList.add('spinning');
+            wheel.style.transform = `rotateX(10deg) translateZ(40px) rotate(${wheelRotation}deg)`;
+            
+            // Calculate which number will be selected (pointer at top = -15 degrees from vertical)
+            const normalizedRotation = wheelRotation % 360;
+            const pointerOffset = 15; // Pointer is at -15 degrees from top
+            const effectiveAngle = (360 - normalizedRotation + pointerOffset) % 360;
+            let selectedNumber = Math.floor(effectiveAngle / 30) + 1;
+            if (selectedNumber > 12) selectedNumber = 1;
+            
+            // Show result after wheel stops
+            setTimeout(() => {
+                wheel.classList.remove('spinning');
+                isWheelSpinning = false;
+                spinButton.disabled = false;
+                
+                // Show result modal
+                showResult(selectedNumber);
+                
+                // Play magical sound
+                if (soundEnabled) {
+                    magicSound.currentTime = 0;
+                    magicSound.play();
+                }
+            }, 5000); // Match the CSS transition duration
+        }
+        
+        // Show result modal with selected number
+        function showResult(number) {
+            resultNumber.textContent = number;
+            resultMessage.textContent = secretMessages[number];
+            resultModal.classList.add('active');
+        }
+        
+        // Toggle sound effects
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            
+            if (soundEnabled) {
+                this.innerHTML = '<i class="fas fa-volume-up"></i>';
+                this.style.color = '#d3a625';
+                this.style.boxShadow = '0 0 15px rgba(211, 166, 37, 0.7)';
+            } else {
+                this.innerHTML = '<i class="fas fa-volume-mute"></i>';
+                this.style.color = '#aaa';
+                this.style.boxShadow = '0 0 15px rgba(170, 170, 170, 0.7)';
+            }
+        }
+        
+        // Toggle background music
+        function toggleMusic() {
+            musicEnabled = !musicEnabled;
+            
+            if (musicEnabled) {
+                this.innerHTML = '<i class="fas fa-music"></i>';
+                this.style.color = '#d3a625';
+                this.style.boxShadow = '0 0 15px rgba(211, 166, 37, 0.7)';
+                backgroundMusic.play().catch(error => {
+                    console.log("Music play failed:", error);
+                });
+            } else {
+                this.innerHTML = '<i class="fas fa-music-slash"></i>';
+                this.style.color = '#aaa';
+                this.style.boxShadow = '0 0 15px rgba(170, 170, 170, 0.7)';
+                backgroundMusic.pause();
+            }
+        }
+        
+        // Handle window resize
+        function handleResize() {
+            setupBookDimensions();
+            
+            // Also resize textarea
+            nameInput.style.height = 'auto';
+            nameInput.style.height = (nameInput.scrollHeight) + 'px';
+        }
+        
+        // Handle keyboard shortcuts
+        function handleKeydown(e) {
+            // Enter to turn page
+            if (e.key === 'Enter' && !pageTurnBtn.classList.contains('disabled') && !e.shiftKey) {
+                e.preventDefault();
+                pageTurnBtn.click();
+            }
+            
+            // Space to spin wheel if on lottery page
+            if (e.key === ' ' && lotteryPage.classList.contains('active') && !isWheelSpinning) {
+                e.preventDefault();
+                spinWheel();
+            }
+            
+            // Escape to close modal and reset app
+            if (e.key === 'Escape' && resultModal.classList.contains('active')) {
+                resultModal.classList.remove('active');
+                setTimeout(resetAndGoToHomePage, 300);
+            }
+        }
+        
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initApp);
+        
+        // Fallback for older browsers
+        if (document.readyState === 'interactive' || document.readyState === 'complete') {
+            initApp();
+        }
+    </script>
+    
+    <!-- PWA Service Worker Script -->
+    <script>
+        // Inline Service Worker registration
+        if ('serviceWorker' in navigator) {
+            const swCode = `
+                const CACHE_NAME = 'sms-greetings-v1.2';
+                const urlsToCache = [
+                    '/',
+                    './index.html',
+                    './manifest.json'
+                ];
+                
+                self.addEventListener('install', event => {
+                    event.waitUntil(
+                        caches.open(CACHE_NAME)
+                            .then(cache => cache.addAll(urlsToCache))
+                    );
+                });
+                
+                self.addEventListener('fetch', event => {
+                    event.respondWith(
+                        caches.match(event.request)
+                            .then(response => response || fetch(event.request))
+                    );
+                });
+                
+                self.addEventListener('activate', event => {
+                    event.waitUntil(
+                        caches.keys().then(cacheNames => {
+                            return Promise.all(
+                                cacheNames.map(cacheName => {
+                                    if (cacheName !== CACHE_NAME) {
+                                        return caches.delete(cacheName);
+                                    }
+                                })
+                            );
+                        })
+                    );
+                });
+            `;
+            
+            // Create a Blob from the service worker code
+            const blob = new Blob([swCode], { type: 'application/javascript' });
+            const swURL = URL.createObjectURL(blob);
+            
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register(swURL)
+                    .then(registration => {
+                        console.log('PWA Service Worker registered with scope:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('PWA Service Worker registration failed:', error);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>
